@@ -17,6 +17,7 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version: '1.21'
+          cache: false
 
       - name: 编译签到工具
         run: go build -o signin_bin ./cmd/signin
@@ -57,8 +58,12 @@ jobs:
           # URL 编码
           TITLE_ENC=$(python3 -c "import urllib.parse; print(urllib.parse.quote('$TITLE'))")
           BODY_ENC=$(python3 -c "import urllib.parse; print(urllib.parse.quote('$BODY'))")
-          curl -s -X POST "${{ secrets.BARK_URL }}/${TITLE_ENC}/${BODY_ENC}" || true
-
+                    curl -s -X POST "http://www.ggsuper.com.cn/push/api/v1/sendMsg_New.php" \
+            -F "title=${TITLE_ENC}" \
+            -F "msg=${BODY_ENC}" \
+            -F "token=${{ secrets.BARK_TOKEN }}" \
+            -F "issecure=0" \
+            -F "sender=TRAE" || true
       - name: 清理凭证
         if: always()
         run: rm -rf auths
