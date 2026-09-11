@@ -56,11 +56,9 @@ jobs:
           fi
           BODY="总计${{ steps.result.outputs.total }} 成功${{ steps.result.outputs.ok }} 已签${{ steps.result.outputs.already }} 失败${{ steps.result.outputs.fail }}"
           # URL 编码
-          TITLE_ENC=$(python3 -c "import urllib.parse; print(urllib.parse.quote('$TITLE'))")
-          BODY_ENC=$(python3 -c "import urllib.parse; print(urllib.parse.quote('$BODY'))")
           curl -s -X POST "http://www.ggsuper.com.cn/push/api/v1/sendMsg_New.php" \
-            -F "title=${TITLE_ENC}" \
-            -F "msg=${BODY_ENC}" \
+            -F "title=${TITLE}" \
+            -F "msg=${BODY}" \
             -F "token=${{ secrets.BARK_TOKEN }}" \
             -F "issecure=0" \
             -F "sender=TRAE" || true
