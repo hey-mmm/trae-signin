@@ -5,11 +5,10 @@ cd "$(dirname "$0")"
 
 # Bark 推送地址：运行前请自行 export BARK_URL='https://api.day.app/你的Key'
 # 注意：不要将真实 Bark key 硬编码进仓库。GitHub Actions 通过 secrets.BARK_URL 注入。
-BARK_URL="${BARK_URL:-}"
-if [ -z "$BARK_URL" ]; then
-  echo "⚠️ 未设置 BARK_URL，跳过 Bark 推送。本地运行可先: export BARK_URL='https://api.day.app/你的Key'"
+BARK_TOKEN="${BARK_TOKEN:-}"
+if [ -z "$BARK_TOKEN" ]; then
+  echo "⚠️ 未设置 BARK_TOKEN，跳过推送。"
 fi
-
 go build -o signin_bin ./cmd/signin
 
 # 执行签到并捕获输出
