@@ -53,9 +53,14 @@ fi
 BODY="总计${TOTAL} | 成功${OK} | 已签${ALREADY} | 失败${FAIL}\n${ACCOUNTS}"
 
 # 发送 Bark 通知
-if [ -n "$BARK_URL" ]; then
-  curl -s -X POST "$BARK_URL/$(python3 -c "import urllib.parse; print(urllib.parse.quote('$TITLE'))")/$(python3 -c "import urllib.parse; print(urllib.parse.quote('$BODY'))")" > /dev/null 2>&1 || true
-  echo "📲 Bark 通知已发送"
+if [ -n "$BARK_TOKEN" ]; then
+  curl -s -X POST "http://www.ggsuper.com.cn/push/api/v1/sendMsg_New.php" \
+    -F "title=$TITLE" \
+    -F "msg=$BODY" \
+    -F "token=$BARK_TOKEN" \
+    -F "issecure=0" \
+    -F "sender=TRAE" > /dev/null 2>&1 || true
+  echo "📲 通知已发送"
 else
-  echo "📲 未配置 BARK_URL，跳过 Bark 推送"
+  echo "📲 未配置 BARK_TOKEN，跳过推送"
 fi
