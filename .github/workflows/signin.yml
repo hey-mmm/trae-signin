@@ -28,7 +28,6 @@ jobs:
           # 账号1
           echo '${{ secrets.TRAE_AUTH_1 }}' > auths/trae-1.json
           # 账号2
-          echo '${{ secrets.TRAE_AUTH_2 }}' > auths/trae-2.json
           # 如需更多账号，添加更多 TRAE_AUTH_N
 
       - name: 执行签到
