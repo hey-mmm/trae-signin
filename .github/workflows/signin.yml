@@ -58,7 +58,7 @@ jobs:
           # URL 编码
           TITLE_ENC=$(python3 -c "import urllib.parse; print(urllib.parse.quote('$TITLE'))")
           BODY_ENC=$(python3 -c "import urllib.parse; print(urllib.parse.quote('$BODY'))")
-                    curl -s -X POST "http://www.ggsuper.com.cn/push/api/v1/sendMsg_New.php" \
+          curl -s -X POST "http://www.ggsuper.com.cn/push/api/v1/sendMsg_New.php" \
             -F "title=${TITLE_ENC}" \
             -F "msg=${BODY_ENC}" \
             -F "token=${{ secrets.BARK_TOKEN }}" \
