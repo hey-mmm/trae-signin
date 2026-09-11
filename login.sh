@@ -10,8 +10,8 @@ API_HOST="https://api.trae.com.cn"
 
 mkdir -p "$AUTH_DIR"
 
-MACHINE_ID="$(openssl rand -hex 16 2>/dev/null || python3 -c 'import secrets;print(secrets.token_hex(16))')"
-DEVICE_ID="$(openssl rand -hex 16 2>/dev/null || python3 -c 'import secrets;print(secrets.token_hex(16))')"
+MACHINE_ID="$(openssl rand -hex 16 2>/dev/null || python -c 'import secrets;print(secrets.token_hex(16))')"
+DEVICE_ID="$(openssl rand -hex 16 2>/dev/null || python -c 'import secrets;print(secrets.token_hex(16))')"
 
 echo "============================================================"
 echo "  TRAE SOLO 登录 - 纯签到版"
@@ -23,7 +23,7 @@ echo "  2. 登录成功后浏览器会跳到打不开的 127.0.0.1 地址"
 echo "  3. 复制浏览器地址栏的完整链接，粘贴到下面"
 echo ""
 
-LOGIN_URL="$(MACHINE_ID="$MACHINE_ID" DEVICE_ID="$DEVICE_ID" CLIENT_ID="$CLIENT_ID" APP_VERSION="$APP_VERSION" python3 - <<'PYEOF'
+LOGIN_URL="$(MACHINE_ID="$MACHINE_ID" DEVICE_ID="$DEVICE_ID" CLIENT_ID="$CLIENT_ID" APP_VERSION="$APP_VERSION" python - <<'PYEOF'
 import os, secrets, urllib.parse
 
 params = {
@@ -63,7 +63,7 @@ if [[ -z "$callback_url" ]]; then
 fi
 
 RESULT=$(CLIENT_ID="$CLIENT_ID" API_HOST="$API_HOST" APP_VERSION="$APP_VERSION" \
-MACHINE_ID="$MACHINE_ID" DEVICE_ID="$DEVICE_ID" CALLBACK_URL="$callback_url" python3 - <<'PYEOF'
+MACHINE_ID="$MACHINE_ID" DEVICE_ID="$DEVICE_ID" CALLBACK_URL="$callback_url" python - <<'PYEOF'
 import json, os, sys, time, urllib.parse, urllib.request, urllib.error
 
 CLIENT_ID = os.environ["CLIENT_ID"]
@@ -178,11 +178,11 @@ if [[ -z "$CRED" ]]; then
     exit 1
 fi
 
-ACCT_UID=$(echo "$CRED" | python3 -c "import json,sys; print(json.load(sys.stdin)['uid'])")
-NICKNAME=$(echo "$CRED" | python3 -c "import json,sys; print(json.load(sys.stdin)['nickname'])")
-TOKEN=$(echo "$CRED" | python3 -c "import json,sys; print(json.load(sys.stdin)['access_token'])")
-REFRESH=$(echo "$CRED" | python3 -c "import json,sys; print(json.load(sys.stdin)['refresh_token'])")
-EXPIRES_AT=$(echo "$CRED" | python3 -c "import json,sys; print(json.load(sys.stdin)['expires_at'])")
+ACCT_UID=$(echo "$CRED" | python -c "import json,sys; print(json.load(sys.stdin)['uid'])")
+NICKNAME=$(echo "$CRED" | python -c "import json,sys; print(json.load(sys.stdin)['nickname'])")
+TOKEN=$(echo "$CRED" | python -c "import json,sys; print(json.load(sys.stdin)['access_token'])")
+REFRESH=$(echo "$CRED" | python -c "import json,sys; print(json.load(sys.stdin)['refresh_token'])")
+EXPIRES_AT=$(echo "$CRED" | python -c "import json,sys; print(json.load(sys.stdin)['expires_at'])")
 
 AUTH_FILE="$AUTH_DIR/trae-${ACCT_UID}.json"
 if [[ -f "$AUTH_FILE" ]]; then
@@ -195,7 +195,7 @@ fi
 
 MACHINE_ID="$MACHINE_ID" DEVICE_ID="$DEVICE_ID" TOKEN="$TOKEN" REFRESH="$REFRESH" \
 EXPIRES_AT="$EXPIRES_AT" ACCT_UID="$ACCT_UID" NICKNAME="$NICKNAME" AUTH_FILE="$AUTH_FILE" \
-ACTION="$ACTION" python3 - <<'PYEOF'
+ACTION="$ACTION" python - <<'PYEOF'
 import json, os
 auth = {
     "account": {"uid": os.environ["ACCT_UID"], "enterpriseId": "", "nickname": os.environ["NICKNAME"]},
@@ -215,7 +215,7 @@ print(f"已保存（{os.environ['ACTION']}）: {os.environ['AUTH_FILE']}")
 PYEOF
 
 # 自动签到 + 查积分
-TOKEN="$TOKEN" DEVICE_ID="$DEVICE_ID" python3 - <<'PYEOF'
+TOKEN="$TOKEN" DEVICE_ID="$DEVICE_ID" python - <<'PYEOF'
 import json, os, urllib.request
 UG = "https://api.trae.cn"
 HDRS = {
